@@ -1,0 +1,4 @@
+使用自定义注解例子。
+
+以下是另一个例子
+http://www.jb51.net/article/110986.htm

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.spider.dao.DbDao">
+	
+	 <select id="getMonitorForTc"  resultType="com.sky.spider.domain.MonitorMainTc"  parameterType="java.util.Map" >
+			 SELECT
+			     monitoring_info_id as id  ,
+			     grogshop_name as hotelName ,
+			     ota_link  as  tcUrl,
+                 city
+			  FROM
+				 sentiment_ota_link_crawl
+              where 
+                 ota_source =#{otaType}
+              ORDER BY 
+                monitoring_info_id
+	  </select>
+	
+	 <select id="getMonitorForPV"  resultType="com.sky.spider.domain.BaseMonitorMain"  parameterType="java.util.Map" >
+			SELECT
+			     id ,
+			     fd_name as fdName ,
+			     fd_object_websit  as  fdObjectWebsit
+			FROM
+				base_monitor_main 
+			where fd_type =#{fdType}  and  is_mci =1
+         
+	  </select>
+	  
+	  
+	  <select id="getMCIMonitor"  resultType="com.sky.spider.domain.BaseMonitorMain"   >
+			SELECT
+			     id ,
+			     fd_name as fdName 
+			FROM
+				base_monitor_main 
+			where fd_type =2  and  is_mci =1 and id >4359
+         
+	  </select>
+	  
+	  <select id="getMCIMonitorZero"  resultType="com.sky.spider.domain.BaseMonitorMain"   >
+			SELECT
+			     monitor_id as id ,
+			     monitor_name as fdName 
+			FROM
+				wx_craw_result 
+			where wx_index =0
+         
+	  </select>
+	  
+	  
+	  <select id="getMonitorKeys"  resultType="com.sky.spider.domain.MonitorKey"  >
+			SELECT
+			     base_monitor_main_id  as monitorId,
+			     monitor_keys as monitorKey ,
+			     key_rate  as  keyRate
+			FROM
+				monitor_keys_relation  
+			where base_monitor_main_id =#{value}  
+         
+	  </select>
+	  
+
+	  
+	  <insert id="saveWxCrawIndex" parameterType="com.sky.spider.domain.WxCrawIndex" >
+	    insert into wx_craw_result 
+	       (monitor_name, monitor_id, wx_index )
+	       values 
+	       (#{monitorName}, #{monitorId}, #{wxIndex}
+	      )
+      </insert>
+      
+       <update id="updateWxCrawIndex" parameterType="com.sky.spider.domain.WxCrawIndex" >
+		    update wx_craw_result 
+		       <set>
+				  `wx_index` = #{wxIndex}
+				</set>
+				where monitor_id = #{monitorId}
+        </update>
+      
+       <insert id="saveWxCrawIndex_err" parameterType="com.sky.spider.domain.WxCrawIndex" >
+	    insert into wx_craw_result_err 
+	       (monitor_name, monitor_id, wx_index )
+	       values 
+	       (#{monitorName}, #{monitorId}, #{wxIndex}
+	      )
+      </insert>
+      
+      <insert id="insertOrder" parameterType="java.lang.String" >
+	    insert into torder (fd_order) values ( #{order} )
+      </insert>
+      
+      <insert id="insertMsg" parameterType="java.lang.String" >
+	    insert into tms1g (msg) values ( #{msg} )
+      </insert>
+
+	
+	
+</mapper>
